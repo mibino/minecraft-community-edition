@@ -9,8 +9,8 @@ Numpy(in Ursina's package?I don't know)
 Run "install.py"<br>
 PS:If you pip's command is "pip3",please run "install-is-pip3.py".
 ## Run:
-Command Prompt please run "start.bat"<br>
-Shell please run "start.sh"
+Command Prompt please run "start.bat".<br>
+Shell please run "start.sh".
 ## Game Guide:
 W:Foward<br>
 S:Back<br>
