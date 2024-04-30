@@ -18,7 +18,7 @@ A:Left<br>
 D:Right<br>
 Space:Jump<br>
 P:Pause Menu<br>
-Number:Set block<br>
+Number:Select block<br>
 M:Switch to display sea<br>
 F5:Reload<br>
 Shift+Q:Quit
