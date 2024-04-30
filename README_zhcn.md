@@ -1,6 +1,6 @@
 # 我的世界 社区版
 我的世界 社区版（简称：Minecraft CE）是用 Python 编写的，基于 Ursina 。<br>
-<a href="README.md">简体中文</a>
+<a href="README.md">English</a>
 ## 库依赖：
 Python 3.8.0+<br>
 Ursina（及其库包）<br>
