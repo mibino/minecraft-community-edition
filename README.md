@@ -1,6 +1,6 @@
 # Minecraft Community Edition
 Minecraft Community Edition(for short:Minecraft CE)write in Python,powered by Ursina.<br>
-<a href="README_ZHCN.md">简体中文</a>
+<a href="README_zhcn.md">简体中文</a>
 ## Libs:
 Python 3.8.0+<br>
 Ursina(and lib package)<br>
