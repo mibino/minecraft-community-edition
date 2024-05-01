@@ -1,11 +1,20 @@
 from ursina import *
 import os
+import sys
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 
-app = Ursina(borderless=False,title='Minecraft CE Launcher')
+lang = sys.argv[1]
+
+if lang == 'en_US':
+    from assets.text.en_US import *
+elif lang == 'zh_CN':
+    from assets.text.zh_CN import *
+else:
+    from assets.text.en_US import *
+
+app = Ursina(borderless=False,title=launcher_title)
 camera.position = (0,2,0)
 camera.fov = 500
-#EditorCamera(position=(0,0.5,0))
 Text.default_font = 'assets/fonts/unifont.otf'
 menu_bgm1 = Audio('assets/sounds/bgm/menu1.mp3', loop=True, autoplay=True)
 buttonclick = Audio('assets/sounds/gui/click.mp3', autoplay=False)
@@ -16,7 +25,7 @@ menu_bgm1.play()
 
 def play_game():
     buttonclick.play()
-    os.system('python minecraft.py')
+    os.system('python minecraft.py ' + lang)
 '''
 bg_buttom = Entity(
     parent=scene,
@@ -101,6 +110,15 @@ title = Entity(
     scale=(0.9,0.2)
 )
 
+splashes = Text(
+    parent=camera.ui,
+    text=splashes_text,
+    origin=(-0.8,-3.5),
+    color=color.yellow,
+    scale=(1.5,1.5),
+    rotation_z=-20
+)
+
 about1 = Text(
     parent=camera.ui,
     text='Minecraft by Mojang Studio',
@@ -126,7 +144,7 @@ play_button = Button(
     parent=camera.ui,
     model='cube',
     texture='assets/textures/gui/button1.png',
-    text='Play',
+    text=play_button_text,
     color='#dddddd',
     scale=(0.3,0.1),
     origin=(0,0),
@@ -141,5 +159,8 @@ sky = Sky(texture='assets/textures/shader/sky.png')
 
 def update():
     camera.rotation_y += 5 * time.dt
+    splashes.animate_color(color.random_color(),duration=0.01,loop=True)
+    # splashes.rotation_x += 2 * time.dt
+    # splashes.scale = splashes.scale - 1 * time.dt
 
 app.run()

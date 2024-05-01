@@ -1,1 +1,1 @@
-python launcher.py
+python startset.py

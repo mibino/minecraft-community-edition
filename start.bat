@@ -1,3 +1,3 @@
 @echo off
-python launcher.py
+python startset.py
 pause
