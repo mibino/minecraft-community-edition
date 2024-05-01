@@ -1,3 +1,6 @@
+# The file has been discarded and its contents have been merged into "minecraft.py". Please do not modify this file.
+
+'''
 from ursina import *
 
 class pause_menu:
@@ -63,3 +66,4 @@ class pause_menu:
             scale=(0.2,0.05,0.2),
             origin=(3.5,-8)
         )
+'''
