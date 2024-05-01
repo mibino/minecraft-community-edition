@@ -1,0 +1,8 @@
+gamename = '我的世界社区版'
+splashes_text = '我的世界社区版！'
+play_button_text = '开始游戏'
+launcher_title = '我的世界社区版 启动器'
+gameps = '如果渲染出现问题，请按F5键重新加载。'
+pause_menu_title = '暂停菜单'
+back_to_game_button_text = '返回至游戏'
+quit_game_button_text = '退出游戏'

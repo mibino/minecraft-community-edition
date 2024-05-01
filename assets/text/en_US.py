@@ -1,0 +1,8 @@
+gamename = 'Minecraft Community Edition'
+splashes_text = 'Minecraft Community Edition!'
+play_button_text = 'Play'
+launcher_title = 'Minecraft CE Launcher'
+gameps = 'If there are rendering issues, please press F5 to reload.'
+pause_menu_title = 'Pause Menu'
+back_to_game_button_text = 'Back to game'
+quit_game_button_text = 'Quit game'
