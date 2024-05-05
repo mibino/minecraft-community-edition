@@ -2,7 +2,6 @@ from ursina import *
 from player import player_entity
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 import random
-from perlin_noise import PerlinNoise
 
 Text.default_font = 'assets/fonts/unifont.otf'
 
