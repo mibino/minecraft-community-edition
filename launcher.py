@@ -159,8 +159,5 @@ sky = Sky(texture='assets/textures/shader/sky.png')
 
 def update():
     camera.rotation_y += 5 * time.dt
-    splashes.animate_color(color.random_color(),duration=0.01,loop=True)
-    # splashes.rotation_x += 2 * time.dt
-    # splashes.scale = splashes.scale - 1 * time.dt
 
 app.run()

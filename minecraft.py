@@ -2,6 +2,7 @@ from ursina import *
 from player import player_entity
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 import random
+from perlin_noise import PerlinNoise
 
 Text.default_font = 'assets/fonts/unifont.otf'
 
@@ -91,12 +92,13 @@ theblockcolor = color.green
 
 
 class Voxel(Button):
-    def __init__(self, position=(0,0,0), texture=blocktexture, scale=1, blockcolor=color.white):
+    def __init__(self, position=(0,0,0), texture=blocktexture, scale=1, blockcolor=color.white, use_deepcopy=True):
         super().__init__(parent=scene,
             position=position,
             model='cube',
             scale=scale,
             origin_y=0,
+            use_deepcopy=use_deepcopy,
             texture=texture,
             color=blockcolor,
             shader=lit_with_shadows_shader,
@@ -110,6 +112,35 @@ class Voxel(Button):
 def input(key):
     global blocktexture
     global theblockcolor
+    global player_run
+    global player_stealth
+    global player_fly
+    if key == 'c':
+        player_run = not player_run
+        if player_run == True:
+            player.speed = 10
+        else:
+            player.speed = 5
+    if key == 'shift':
+        player_stealth = not player_stealth
+        if player_stealth == True:
+            player.speed = 2.5
+            player.height = 1.4
+        else:
+            player.speed = 5
+            player.height = 1.6
+    if key == 'f':
+        player_fly = not player_fly
+        if player_fly == True:
+            player.gravity = 0
+        else:
+            player.gravity = 1
+    if key == '.':
+        for i in range(10):
+            player.y = player.y + 1 * time.dt
+    if key == ',':
+        for i in range(10):
+            player.y = player.y - 1 * time.dt
     if key == '1':
         blocktexture = 'assets/textures/block/grass_top.png'
         theblockcolor = color.green
@@ -119,12 +150,15 @@ def input(key):
     if key == '3':
         blocktexture = 'assets/textures/block/planks_oak.png'
         theblockcolor = color.white
+    if key == '4':
+        blocktexture = 'assets/textures/block/glass.png'
+        theblockcolor = color.white
     if key == 'r':
         player.x = random.uniform(-511,511)
         player.y = 50
         player.z = random.uniform(-511,511)
     if key == 'l':
-        player.position = (0,1,0)
+        player.position = (0,10,0)
     if key == 'm':
         sea.visible = not sea.visible
     if key == 'p':
@@ -141,37 +175,52 @@ app = Ursina(borderless=False,title=gamename)
 
 window.exit_button.visible = False
 
+player_run = False
+player_fly = False
+player_stealth = False
 
 game_bgm1 = Audio('assets/sounds/bgm/creative1.mp3', loop=True, autoplay=True)
 game_bgm1.play()
 
 # input_entity = Entity(input=input)
 
-for x in range(-12,12,1):
-    for z in range(-12,12,1):
-        Voxel(position=(x,0,z),texture=blocktexture,blockcolor=color.green)
+# noise = PerlinNoise(octaves=1,seed=1000)
+
+scale_x = 16
+scale_z = 16
 
 
+for x in range(-scale_x,scale_x,1):
+    for z in range(-scale_z,scale_z,1):
+        block = Voxel(position=(x,0,z),texture=blocktexture,blockcolor=color.green)
+        # block.y = floor(noise([x/16,z/16])*8)+10
+
+
+
+
+def update():
+    print(player.position)
 
 fakeplane = Entity(
     parent=scene,
     model='cube',
     position=(0,-1,0),
-    scale=(1024,1,1024),
+    scale=(8092,1,8092),
     shader=lit_with_shadows_shader,
     texture='assets/textures/block/grass_top.png',
-    texture_scale=(1024,1024),
+    texture_scale=(8092,8092),
     collider='box',
     color=color.green
 )
 
+
 sea  = Entity(
     parent=scene,
     position=(0,0.3,0),
-    scale=(1024,0.1,1024),
+    scale=(8092,0.1,8092),
     model='cube',
     texture='assets/textures/block/water.png',
-    texture_scale=(1024,1024),
+    texture_scale=(8092,8092),
     shader=lit_with_shadows_shader
 )
 
@@ -195,7 +244,10 @@ DirectionalLight(parent=pivot,position=(0,128,0),shader=True)
 
 sky = Sky(texture='assets/textures/shader/sky.png')
 
+
+# player = EditorCamera()
 player = player_entity()
+player.position = (0,10,0)
 
 
 app.run()
