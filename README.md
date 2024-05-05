@@ -21,6 +21,6 @@ P:Pause Menu<br>
 Number:Select block<br>
 M:Switch to display sea<br>
 Shift:Stealth<br>
-F:Fly<br>
+F:Fly(Press "," Down,Press "." Up)<br>
 F5:Reload<br>
 Shift+Q:Quit
