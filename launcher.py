@@ -9,12 +9,14 @@ if lang == 'en_US':
     from assets.text.en_US import *
 elif lang == 'zh_CN':
     from assets.text.zh_CN import *
+elif lang == 'zh_TW':
+    from assets.text.zh_TW import *
 else:
     from assets.text.en_US import *
 
 app = Ursina(borderless=False,title=launcher_title)
-camera.position = (0,2,0)
-camera.fov = 500
+camera.position = (0,0.5,0)
+camera.fov = 150
 Text.default_font = 'assets/fonts/unifont.otf'
 menu_bgm1 = Audio('assets/sounds/bgm/menu1.mp3', loop=True, autoplay=True)
 buttonclick = Audio('assets/sounds/gui/click.mp3', autoplay=False)
@@ -26,7 +28,7 @@ menu_bgm1.play()
 def play_game():
     buttonclick.play()
     os.system('python minecraft.py ' + lang)
-'''
+
 bg_buttom = Entity(
     parent=scene,
     model='cube',
@@ -88,9 +90,9 @@ bg_right = Entity(
     rotation_z=0,
     scale=(1,0.01,1)
 )
-'''
 
-background = Entity(
+
+'''background = Entity(
     parent=scene,
     model='cube',
     position=(0,0,0),
@@ -100,7 +102,7 @@ background = Entity(
     texture_scale=(1024,1024),
     collider='box',
     color=color.green
-)
+)'''
 
 title = Entity(
     parent=camera.ui,
@@ -135,8 +137,8 @@ about2 = Text(
 
 about3 = Text(
     parent=camera.ui,
-    text='Minecraft Cuommunity Edition Demo',
-    origin=(-1.6,19),
+    text='Alpha 0.1.1',
+    origin=(-5.8,19),
     scale=(1,1)
 )
 
@@ -152,10 +154,10 @@ play_button = Button(
     on_click=play_game
 )
 
-pivot = Entity()
-DirectionalLight(parent=pivot,position=(0,128,0),shader=False)
+# pivot = Entity()
+# DirectionalLight(parent=pivot,position=(0,128,0),shader=False)
 
-sky = Sky(texture='assets/textures/shader/sky.png')
+# sky = Sky(texture='assets/textures/shader/sky.png')
 
 def update():
     camera.rotation_y += 5 * time.dt

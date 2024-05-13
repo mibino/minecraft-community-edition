@@ -3,10 +3,10 @@ from ursina import *
 
 class player_entity(Entity):
     def __init__(self, **kwargs):
-        self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
+        self.cursor = Entity(parent=camera.ui, model='cube', texture='assets/textures/gui/cursor.png', color=color.white, scale=0.02)
         super().__init__()
         self.speed = 5
-        self.height = 1.7
+        self.height = 1.6
         self.camera_pivot = Entity(parent=self, y=self.height)
 
         camera.parent = self.camera_pivot
@@ -115,7 +115,7 @@ class player_entity(Entity):
 
     def on_enable(self):
         mouse.locked = True
-        self.cursor.enabled = False
+        self.cursor.enabled = True
 
 
     def on_disable(self):

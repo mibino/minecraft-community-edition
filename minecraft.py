@@ -2,8 +2,14 @@ from ursina import *
 from player import player_entity
 from ursina.shaders.lit_with_shadows_shader import lit_with_shadows_shader
 import random
+from item_bar import *
+import numpy as np
+
+create_new_world = 0
+
 
 Text.default_font = 'assets/fonts/unifont.otf'
+
 
 
 
@@ -79,19 +85,20 @@ if lang == 'en_US':
     from assets.text.en_US import *
 elif lang == 'zh_CN':
     from assets.text.zh_CN import *
+elif lang == 'zh_TW':
+    from assets.text.zh_TW import *
 else:
     from assets.text.en_US import *
 
-def phfk():
-    destroy(mouse.hovered_entity)
 
 blocktexture = 'assets/textures/block/grass_top.png'
-theblockcolor = color.green
+
 # If there are rendering issues, please press F5 to reload.
 
 
 class Voxel(Button):
-    def __init__(self, position=(0,0,0), texture=blocktexture, scale=1, blockcolor=color.white, use_deepcopy=True):
+    def __init__(self, position=(0,0,0), texture=blocktexture, scale=1, use_deepcopy=True, highlight_color=color.light_gray):
+        global destroy_block
         super().__init__(parent=scene,
             position=position,
             model='cube',
@@ -99,21 +106,31 @@ class Voxel(Button):
             origin_y=0,
             use_deepcopy=use_deepcopy,
             texture=texture,
-            color=blockcolor,
-            shader=lit_with_shadows_shader,
+            color=color.white,
+            # shader=lit_with_shadows_shader,
             highlight_color=color.light_gray,
-            on_click=phfk
+            on_click=self.destroy_block
         )
+    def get_position(self):
+        return self.position
+    def destroy_block(self):
+        if mouse.hovered_entity == self:
+            destroy(self)
+
+        
 
 
 
 
 def input(key):
     global blocktexture
-    global theblockcolor
     global player_run
     global player_stealth
     global player_fly
+    global game_bgm1
+    global game_bgm2
+    global game_bgm
+    global worldblock
     if key == 'c':
         player_run = not player_run
         if player_run == True:
@@ -128,47 +145,58 @@ def input(key):
         else:
             player.speed = 5
             player.height = 1.6
+    if key == 'v':
+        with open('world.mclevel', 'w') as l:
+            for i in range(0, len(worldblock), 2):  # 每两个元素迭代一次
+                l.write(str(worldblock[i]) + '\n')  # 写入 texture
+                l.write(str(worldblock[i+1]) + '\n')  # 写入 position
     if key == 'f':
         player_fly = not player_fly
         if player_fly == True:
             player.gravity = 0
         else:
             player.gravity = 1
-    if key == '.':
+    '''if key == '.':
         for i in range(10):
             player.y = player.y + 1 * time.dt
     if key == ',':
         for i in range(10):
-            player.y = player.y - 1 * time.dt
+            player.y = player.y - 1 * time.dt'''
     if key == '1':
         blocktexture = 'assets/textures/block/grass_top.png'
-        theblockcolor = color.green
     if key == '2':
         blocktexture = 'assets/textures/block/stone.png'
-        theblockcolor = color.white
     if key == '3':
         blocktexture = 'assets/textures/block/planks_oak.png'
-        theblockcolor = color.white
     if key == '4':
         blocktexture = 'assets/textures/block/glass.png'
-        theblockcolor = color.white
     if key == 'r':
         player.x = random.uniform(-511,511)
         player.y = 50
         player.z = random.uniform(-511,511)
     if key == 'l':
         player.position = (0,10,0)
-    if key == 'm':
-        sea.visible = not sea.visible
     if key == 'p':
         pause_menu()
     if key == 't':
         player.x = player.x + 10
+    if key == 'b':
+        game_bgm += 1
+        if game_bgm > 2:
+            game_bgm = 1
+        if game_bgm == 1:
+            game_bgm2.stop()
+            game_bgm1.play()
+        if game_bgm == 2:
+            game_bgm1.stop()
+            game_bgm2.play()
     if key == 'right mouse down':
         hit_info = raycast(camera.world_position, camera.forward, distance=10)
         if hit_info.hit:
-            Voxel(position=hit_info.entity.position + hit_info.normal,texture=blocktexture,blockcolor=theblockcolor)
-
+            new_block = Voxel(position=hit_info.entity.position + hit_info.normal,texture=blocktexture)
+            worldblock.append(new_block.texture)
+            worldblock.append(new_block.position)
+            print(worldblock)
 
 app = Ursina(borderless=False,title=gamename)
 
@@ -178,8 +206,9 @@ player_run = False
 player_fly = False
 player_stealth = False
 
-game_bgm1 = Audio('assets/sounds/bgm/creative1.mp3', loop=True, autoplay=True)
-game_bgm1.play()
+game_bgm = 1
+game_bgm1 = Audio('assets/sounds/bgm/creative1.mp3', loop=True, autoplay=False)
+game_bgm2 = Audio('assets/sounds/bgm/creative2.mp3', loop=True, autoplay=False)
 
 # input_entity = Entity(input=input)
 
@@ -191,39 +220,50 @@ scale_z = 16
 
 for x in range(-scale_x,scale_x,1):
     for z in range(-scale_z,scale_z,1):
-        block = Voxel(position=(x,0,z),texture=blocktexture,blockcolor=color.green)
+        block = Voxel(position=(x,0,z),texture=blocktexture)
         # block.y = floor(noise([x/16,z/16])*8)+10
 
 
 
 
 def update():
-    print(player.position)
+    if held_keys['.']:
+        player.y = player.y + 5 * time.dt
+    elif held_keys[',']:
+        player.y = player.y - 5 * time.dt
+
+
+
+if game_bgm == 1:
+    game_bgm1.play()
+if game_bgm == 2:
+    game_bgm2.play()
+    
+
+item_bar()
 
 fakeplane = Entity(
     parent=scene,
     model='cube',
     position=(0,-1,0),
-    scale=(8092,1,8092),
-    shader=lit_with_shadows_shader,
-    texture='assets/textures/block/grass_top.png',
-    texture_scale=(8092,8092),
-    collider='box',
-    color=color.green
+    scale=(8192,1,8192),
+    # shader=lit_with_shadows_shader,
+    texture='assets/textures/block/bedrock.png',
+    texture_scale=(8192,8192),
+    collider='box'
 )
 
 
 sea  = Entity(
     parent=scene,
     position=(0,0.3,0),
-    scale=(8092,0.1,8092),
+    scale=(8192,0.1,8192),
     model='cube',
     texture='assets/textures/block/water.png',
-    texture_scale=(8092,8092),
-    shader=lit_with_shadows_shader
+    texture_scale=(8192,8192),
+    # shader=lit_with_shadows_shader
 )
 
-sea.visible = False
 
 gametitle = Text(
     parent=camera.ui,
@@ -238,15 +278,59 @@ ps = Text(
 )
 
 
-pivot = Entity()
-DirectionalLight(parent=pivot,position=(0,128,0),shader=True)
+# pivot = Entity()
+# DirectionalLight(parent=pivot,position=(0,128,0),shader=True)
 
 sky = Sky(texture='assets/textures/shader/sky.png')
 
 
+try:
+    with open('world.mclevel', 'r') as k:
+        worldblock = []
+        lines = k.readlines()  # 读取所有行
+        # 假设每一对行包含一个 texture 和一个 Vec3 位置信息
+        for i in range(0, len(lines), 2):  # 每两行迭代一次
+            texture = lines[i].strip()
+            vec3_str = lines[i+1].strip()
+            # 尝试解析 Vec3 字符串
+            try:
+                # 假设 Vec3 字符串格式为 "Vec3(x, y, z)"
+                _, position_str = vec3_str.split('(')
+                position_str = position_str.rstrip(')')
+                x, y, z = map(float, position_str.split(','))  # 将 texture 和元组形式的位置存储在 worldblock 列表中
+                # 创建 Voxel 对象并添加到场景
+                level_new_block = Voxel(
+                position=(x, y, z),
+                texture=texture
+                )
+                worldblock.append(level_new_block.texture)
+                worldblock.append(level_new_block.position)
+            except Exception as e:
+                print(f"Error parsing Vec3 string: {vec3_str}")
+                print(e)
+        print(worldblock)
+except FileNotFoundError:
+    print("World not found...")
+    worldblock = []
+
+# def create_voxels_from_list(voxel_list):
+'''for texture, position in worldblock:
+    # 从元组中提取 x, y, z 值
+    x, y, z = position
+   # 创建 Voxel 对象并添加到场景
+    level_new_block = Voxel(
+        position=(x, y, z),
+        texture=texture
+    )
+    worldblock.append(level_new_block.texture)
+    worldblock.append(level_new_block.position)'''
+        
+
+# 在 Ursina 应用设置之后和 app.run() 之前调用函数
+# create_voxels_from_list(worldblock)
+
 # player = EditorCamera()
 player = player_entity()
-player.position = (0,10,0)
-
+player.position = (0,12,0)
 
 app.run()
