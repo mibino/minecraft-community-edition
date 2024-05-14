@@ -137,7 +137,7 @@ about2 = Text(
 
 about3 = Text(
     parent=camera.ui,
-    text='Alpha 0.1.1',
+    text='Alpha 0.2.0',
     origin=(-5.8,19),
     scale=(1,1)
 )

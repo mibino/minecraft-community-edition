@@ -115,6 +115,20 @@ class Voxel(Button):
         return self.position
     def destroy_block(self):
         if mouse.hovered_entity == self:
+            # 获取当前方块的纹理和位置
+            texture = self.texture
+            position = self.get_position()
+            
+            # 查找 worldblock 中对应纹理的位置
+            for i in range(0, len(worldblock), 2):  # 每两个元素迭代一次
+                if worldblock[i] == texture:
+                    # 检查位置是否匹配
+                    if worldblock[i+1] == position:
+                        worldblock.pop(i+1)  # 删除位置
+                        worldblock.pop(i)    # 删除纹理
+                        break  # 找到匹配的纹理和位置后退出循环
+
+            # 删除方块实体
             destroy(self)
 
         
