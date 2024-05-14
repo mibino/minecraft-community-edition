@@ -21,6 +21,6 @@ P:Pause Menu<br>
 Number:Select block<br>
 Shift:Stealth<br>
 F:Fly(Held press "," Down,Held press "." Up)<br>
-V:Save Level<br>
+V:Save Level(In developing)<br>
 F5:Reload<br>
 Shift+Q:Quit
