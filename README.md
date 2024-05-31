@@ -23,4 +23,14 @@ Shift:Stealth<br>
 F:Fly(Held press "," Down,Held press "." Up)<br>
 V:Save Level(In developing)<br>
 F5:Reload<br>
+X:Rising sea level<br>
+Z:Lowering sea level<br>
+K:Place the selected block at the current player's position<br>
+L:Back to spawn point<br>
+N:Go to nether<br>
+O:Go to overworld<br>
+J:Go to the world border<br>
+R:Random position<br>
+T:Player's x position + 10<br>
+B:Switch BGM<br>
 Shift+Q:Quit
